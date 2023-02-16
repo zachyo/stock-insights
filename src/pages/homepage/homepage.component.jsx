@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import MovieCard from "../../components/movie-card/movie-card";
 import SearchBar from "../../components/search-bar/search-bar";
 import Spinner from "../../components/spin-loader/loader.component";
+import SearchContext from "../../contexts/searchContext";
 import { dateFilter, genreFilter, searchFilter } from "../../utilities/searchFilter";
 import useFetch from "../../utilities/useFetch";
 
@@ -13,10 +14,11 @@ const Homepage = () => {
   const url = `https://api.github.com/users/zachyo/movies`;
 
   const { loading, error, data } = useFetch(url);
+  console.log(data,data,error)
 
   let newData = data;
 
-  useEffect(() => {
+
     if (searchKey) {
       newData = searchFilter(searchKey, data);
       // console.log(searchKey, newData);
@@ -26,7 +28,7 @@ const Homepage = () => {
     }if (releaseDate) {
       newData = dateFilter(releaseDate, data);
     }
-  },[searchKey, genreFilterKey, releaseDate]);
+  
 
   //paging system
   const PER_PAGE = 4;
@@ -40,29 +42,34 @@ const Homepage = () => {
     return <MovieCard movie={movie} key={movie.id} />;
   });
 
-  if (!loading && error) {
-    return (
-      <>
-        <h2>{error}</h2>
-        <p>Failed to fetch. Kindly check your internet connection.</p>
-      </>
-    );
-  }
+  // if (error) {
+  //  return (<>Reload</>)
+  // }
+
+  // if (!loading && error) {
+  //   return (
+  //     <>
+  //       {/* <h2>{error}</h2> */}
+  //       <p>Failed to fetch. Kindly check your internet connection.</p>
+  //     </>
+  //   );
+  // }
   return (
     <div className="homepage">
+      <div className="header">
+        <h1>Welcome to Uptick Movies</h1>
+        <p>Full Access to your favourite movies and lots more</p>
+      </div>
+      <div className="search_filter">
+        <SearchBar />
+        
+      </div>
       {loading ? (
         <Spinner />
       ) : (
         <>
-          <div className="header">
-            <h1>Welcome to Uptick Movies</h1>
-            <p>Full Access to your favourite movies and lots more</p>
-          </div>
-          <div className="search_filter">
-            <SearchBar />
-          </div>
-          <Movies />
-          //pagination
+          {Movies}
+          {/* pagination */}
           <>
             <h3 className="pagination">
               Pages: {newData?.length > 0 ? page : 0} of {pages}
