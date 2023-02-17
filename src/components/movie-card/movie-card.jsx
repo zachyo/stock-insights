@@ -13,7 +13,7 @@ const MovieCard = ({ movie }) => {
   })
   return (
     <div className="movie-card ">
-      {/* <img src={img_url} alt="" /> */}
+      <img src={img_url} alt="" />
       <h2>{title}</h2>
       <p>{overview}</p>
       <p>Genres : {genres}</p>
