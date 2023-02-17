@@ -4,7 +4,11 @@ import MovieCard from "../../components/movie-card/movie-card";
 import SearchBar from "../../components/search-bar/search-bar";
 import Spinner from "../../components/spin-loader/loader.component";
 import SearchContext from "../../contexts/searchContext";
-import { dateFilter, genreFilter, searchFilter } from "../../utilities/searchFilter";
+import {
+  dateFilter,
+  genreFilter,
+  searchFilter,
+} from "../../utilities/searchFilter";
 import useFetch from "../../utilities/useFetch";
 
 const Homepage = () => {
@@ -15,37 +19,30 @@ const Homepage = () => {
   const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}`;
 
   const { loading, error, data } = useFetch(url);
-  console.log(data,data,error)
+  console.log(data, data, error);
 
   let newData = data?.results;
 
-
-    if (searchKey) {
-      newData = searchFilter(searchKey, newData);
-      // console.log(searchKey, newData);
-    }
-    if (genreFilterKey) {
-      newData = genreFilter(genreFilterKey, data);
-    }if (releaseDate) {
-      newData = dateFilter(releaseDate, data);
-    }
-  
+  if (searchKey) {
+    newData = searchFilter(searchKey, newData);
+  }
+  if (genreFilterKey) {
+    newData = genreFilter(genreFilterKey, newData);
+  }
+  if (releaseDate) {
+    newData = dateFilter(releaseDate, newData);
+  }
 
   //paging system
   const PER_PAGE = 4;
   const total = newData?.length;
   const pages = Math.ceil(total / PER_PAGE);
-  console.log(newData);
-  //   console.log(pages,total);
   const skip = page * PER_PAGE - PER_PAGE;
 
   const Movies = newData?.slice(skip, skip + PER_PAGE).map((movie, index) => {
     return <MovieCard movie={movie} key={movie.id} />;
   });
 
-  // if (error) {
-  //  return (<>Reload</>)
-  // }
 
   // if (!loading && error) {
   //   return (
@@ -63,9 +60,14 @@ const Homepage = () => {
       </div>
       <div className="search_filter">
         <SearchBar />
-        <FilterSelect/>
-        
+        <FilterSelect />
       </div>
+      {error && (
+        <>
+          <h2>Failed to fetch</h2>
+          <p>Kindly reload the page or check your internet connection</p>
+        </>
+      )}
       {loading ? (
         <Spinner />
       ) : (
@@ -89,7 +91,9 @@ const Homepage = () => {
                     onClick={() => setPage(each)}
                     key={each}
                     style={page === each ? { backgroundColor: "#011ff3" } : {}}
-                  >{each}</span>
+                  >
+                    {each}
+                  </span>
                 )
               )}
               <button
