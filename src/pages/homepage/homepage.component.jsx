@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import FilterSelect from "../../components/filter-select/filter-select";
 import MovieCard from "../../components/movie-card/movie-card";
 import SearchBar from "../../components/search-bar/search-bar";
 import Spinner from "../../components/spin-loader/loader.component";
@@ -9,18 +10,18 @@ import useFetch from "../../utilities/useFetch";
 const Homepage = () => {
   const [page, setPage] = useState(1);
   const { searchKey, genreFilterKey, releaseDate } = useContext(SearchContext);
-
+  const apiKey = process.env.REACT_APP_MOVIE_API_KEY;
   //change to movie api
-  const url = `https://api.github.com/users/zachyo/movies`;
+  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}`;
 
   const { loading, error, data } = useFetch(url);
   console.log(data,data,error)
 
-  let newData = data;
+  let newData = data?.results;
 
 
     if (searchKey) {
-      newData = searchFilter(searchKey, data);
+      newData = searchFilter(searchKey, newData);
       // console.log(searchKey, newData);
     }
     if (genreFilterKey) {
@@ -34,7 +35,7 @@ const Homepage = () => {
   const PER_PAGE = 4;
   const total = newData?.length;
   const pages = Math.ceil(total / PER_PAGE);
-  console.log(data);
+  console.log(newData);
   //   console.log(pages,total);
   const skip = page * PER_PAGE - PER_PAGE;
 
@@ -62,6 +63,7 @@ const Homepage = () => {
       </div>
       <div className="search_filter">
         <SearchBar />
+        <FilterSelect/>
         
       </div>
       {loading ? (
@@ -87,7 +89,7 @@ const Homepage = () => {
                     onClick={() => setPage(each)}
                     key={each}
                     style={page === each ? { backgroundColor: "#011ff3" } : {}}
-                  ></span>
+                  >{each}</span>
                 )
               )}
               <button
