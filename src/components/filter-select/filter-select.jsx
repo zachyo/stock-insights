@@ -2,6 +2,8 @@ import { useContext } from "react";
 import SearchContext from "../../contexts/searchContext";
 import genreList from "../../utilities/genres";
 
+import './filter-select.scss'
+
 const FilterSelect = () => {
   const { handleGenre, handleRelease } = useContext(SearchContext);
 
