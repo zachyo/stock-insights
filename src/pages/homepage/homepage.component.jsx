@@ -11,6 +11,8 @@ import {
 } from "../../utilities/searchFilter";
 import useFetch from "../../utilities/useFetch";
 
+import "./homepage.styles.scss";
+
 const Homepage = () => {
   const [page, setPage] = useState(1);
   const { searchKey, genreFilterKey, releaseDate } = useContext(SearchContext);
@@ -43,7 +45,6 @@ const Homepage = () => {
     return <MovieCard movie={movie} key={movie.id} />;
   });
 
-
   // if (!loading && error) {
   //   return (
   //     <>
@@ -55,8 +56,14 @@ const Homepage = () => {
   return (
     <div className="homepage">
       <div className="header">
-        <h1>Welcome to Uptick Movies</h1>
-        <p>Full Access to your favourite movies and lots more</p>
+        <h1>
+          Welcome to{" "}
+          <span>
+            <em>Uptick</em>
+          </span>{" "}
+          Movies
+        </h1>
+        <p>Full Access to your favourite movies and lots more...</p>
       </div>
       <div className="search_filter">
         <SearchBar />
@@ -72,7 +79,8 @@ const Homepage = () => {
         <Spinner />
       ) : (
         <>
-          {Movies}
+          <div className="movies-section">{Movies}</div>
+
           {/* pagination */}
           <>
             <h3 className="pagination">
@@ -92,7 +100,7 @@ const Homepage = () => {
                     key={each}
                     style={page === each ? { backgroundColor: "#011ff3" } : {}}
                   >
-                    {each}
+                    {/* {each} */}
                   </span>
                 )
               )}
