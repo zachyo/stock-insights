@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Error from "../../components/error/error";
 import FilterSelect from "../../components/filter-select/filter-select";
 import MovieCard from "../../components/movie-card/movie-card";
 import SearchBar from "../../components/search-bar/search-bar";
@@ -21,7 +22,6 @@ const Homepage = () => {
   const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}`;
 
   const { loading, error, data } = useFetch(url);
-  console.log(data, data, error);
 
   let newData = data?.results;
 
@@ -34,6 +34,7 @@ const Homepage = () => {
   if (releaseDate) {
     newData = dateFilter(releaseDate, newData);
   }
+  // setPage(newData?.length)
 
   //paging system
   const PER_PAGE = 4;
@@ -45,14 +46,17 @@ const Homepage = () => {
     return <MovieCard movie={movie} key={movie.id} />;
   });
 
-  // if (!loading && error) {
-  //   return (
-  //     <>
-  //       {/* <h2>{error}</h2> */}
-  //       <p>Failed to fetch. Kindly check your internet connection.</p>
-  //     </>
-  //   );
-  // }
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [page]);
+
+  if (!loading && error) {
+    return (
+      <div className="homepage">
+        <Error/>
+      </div>
+    );
+  }
   return (
     <div className="homepage">
       <div className="header">
