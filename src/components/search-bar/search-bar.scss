@@ -22,3 +22,11 @@
     // margin-top: -9rem;
   }
 }
+@media (max-width : 768px) {
+  .search-bar {
+    width: 20.6rem;
+    input {
+      width: 18rem;
+    }
+  }
+}
