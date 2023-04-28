@@ -25,7 +25,7 @@ const Homepage = () => {
     if (optionsList[option]) {
       return (
         <span key={i} onClick={() => removeOne(option)}>
-          {option} <p>&#10006;</p>
+          {option} <>&#10006;</>
         </span>
       );
     }
@@ -64,7 +64,7 @@ const Homepage = () => {
         {optionSelected}
         {num > 1 ? (
           <span onClick={removeAll}>
-            Clear All Filters <p>&#10006;</p>
+            Clear All Filters <>&#10006;</>
           </span>
         ) : (
           <></>
