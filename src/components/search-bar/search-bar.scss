@@ -1,13 +1,14 @@
 .search-bar {
-  border: 2px solid blue;
-  width: 30rem;
-  margin: 2rem auto 1rem auto;
+  // border: 2px solid blue;
+  width: 100%;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
   position: relative;
   background: #f8f8ff;
   border-radius: 5px;
 
   input {
-    width: 27rem;
+    width: 93%;
     padding: 0.7rem 0;
     margin-left: 2rem;
     background: transparent;
@@ -24,9 +25,8 @@
 }
 @media (max-width : 768px) {
   .search-bar {
-    width: 20.6rem;
     input {
-      width: 18rem;
+      width: 80%;
     }
   }
 }

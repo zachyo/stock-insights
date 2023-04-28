@@ -1,123 +1,75 @@
-import { useContext, useEffect, useState } from "react";
-import Error from "../../components/error/error";
+import { useContext } from "react";
 import FilterSelect from "../../components/filter-select/filter-select";
-import MovieCard from "../../components/movie-card/movie-card";
 import SearchBar from "../../components/search-bar/search-bar";
-import Spinner from "../../components/spin-loader/loader.component";
 import SearchContext from "../../contexts/searchContext";
 import {
-  dateFilter,
-  genreFilter,
   searchFilter,
 } from "../../utilities/searchFilter";
-import useFetch from "../../utilities/useFetch";
 
 import "./homepage.styles.scss";
 
 const Homepage = () => {
-  const [page, setPage] = useState(1);
-  const { searchKey, genreFilterKey, releaseDate } = useContext(SearchContext);
-  const apiKey = process.env.REACT_APP_MOVIE_API_KEY;
-  //change to movie api
-  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}`;
+  const { searchKey, optionsList, removeAll, removeOne } = useContext(SearchContext);
 
-  const { loading, error, data } = useFetch(url);
-
-  let newData = data?.results;
-
+  let num = 0;
+  for (const option in optionsList) {
+    if (optionsList[option]) {
+      num++;
+    }
+  }
+  let newData;
   if (searchKey) {
     newData = searchFilter(searchKey, newData);
   }
-  if (genreFilterKey) {
-    newData = genreFilter(genreFilterKey, newData);
-  }
-  if (releaseDate) {
-    newData = dateFilter(releaseDate, newData);
-  }
-  // setPage(newData?.length)
-
-  //paging system
-  const PER_PAGE = 4;
-  const total = newData?.length;
-  const pages = Math.ceil(total / PER_PAGE);
-  const skip = page * PER_PAGE - PER_PAGE;
-
-  const Movies = newData?.slice(skip, skip + PER_PAGE).map((movie, index) => {
-    return <MovieCard movie={movie} key={movie.id} />;
+  const optionSelected = Object.keys(optionsList).map((option, i) => {
+    if (optionsList[option]) {
+      return (
+        <span key={i} onClick={() => removeOne(option)}>
+          {option} <p>&#10006;</p>
+        </span>
+      );
+    }
   });
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [page]);
 
-  if (!loading && error) {
-    return (
-      <div className="homepage">
-        <Error/>
-      </div>
-    );
-  }
   return (
     <div className="homepage">
       <div className="header">
-        <h1>
-          Welcome to{" "}
-          <span>
-            <em>Uptick</em>
-          </span>{" "}
-          Movies
-        </h1>
-        <p>Full Access to your favourite movies and lots more...</p>
+        <h1>Welcome! </h1>
+        <p>
+          You can ask questions to search through Earnings Calls Transcripts of
+          Public Companies!
+        </p>
       </div>
       <div className="search_filter">
-        <SearchBar />
-        <FilterSelect />
+        <h2>Search Within :</h2>
+        <FilterSelect
+          name="Select Time"
+          val={[
+            "Q2 FY23",
+            "Q1 FY23",
+            "Q4 FY22",
+            "Q3 FY22",
+            "Q2 FY22",
+            "Q1 FY22",
+          ]}
+        />
+        <FilterSelect
+          name="Select Stocks"
+          val={["OLECTRA", "TATAMOTORS", "ASHOKLEY", "JBMA", "EICHERMOT"]}
+        />
       </div>
-      {error && (
-        <>
-          <h2>Failed to fetch</h2>
-          <p>Kindly reload the page or check your internet connection</p>
-        </>
-      )}
-      {loading ? (
-        <Spinner />
-      ) : (
-        <>
-          <div className="movies-section">{Movies}</div>
-
-          {/* pagination */}
-          <>
-            <h3 className="pagination">
-              Pages: {newData?.length > 0 ? page : 0} of {pages}
-            </h3>
-            <div className="page-btns">
-              <button
-                disabled={page <= 1}
-                onClick={() => setPage((prev) => prev - 1)}
-              >
-                Prev
-              </button>
-              {Array.from({ length: pages }, (_, index) => index + 1).map(
-                (each) => (
-                  <span
-                    onClick={() => setPage(each)}
-                    key={each}
-                    style={page === each ? { backgroundColor: "#011ff3" } : {}}
-                  >
-                    {/* {each} */}
-                  </span>
-                )
-              )}
-              <button
-                disabled={page >= pages}
-                onClick={() => setPage((prev) => prev + 1)}
-              >
-                Next
-              </button>
-            </div>
-          </>
-        </>
-      )}
+      <SearchBar children={"Enter any question here"} />
+      <div className="selected" style={num === 0 ? { display: "none" } : {}}>
+        {optionSelected}
+        {num > 1 ? (
+          <span onClick={removeAll}>
+            Clear All Filters <p>&#10006;</p>
+          </span>
+        ) : (
+          <></>
+        )}
+      </div>
     </div>
   );
 };
